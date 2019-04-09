@@ -23,6 +23,7 @@ int main(int argc, char **argv)
     while(ros::ok)
     {
 
+        //sm.stateChanger(); 
         loop_rate.sleep();
             
         ros::spinOnce(); 

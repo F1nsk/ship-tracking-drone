@@ -13,7 +13,38 @@ stateMachine::stateMachine()
 void stateMachine::stateChanger()
 {   
     
+        if(takeOffCMD == true)
+        {
+            stateTakeOff(); 
+            stateSearching(); 
+            std::cout << " taking off, starting search" << std::endl; 
+        }
+        else  if(detector == true)
+        {
+            stateClassify(); 
+            std::cout << " starting classifier" << std::endl; 
+        }
+        else if( classifer != true)
+        {
+            //continue searching 
+            std::cout << " not of interest continuing " << std::endl; 
+        }
+        else if(classifer == true)
+        {
+            stateTrack(); 
+            std::cout << "of interest - tracking" << std::endl; 
+        }
+        else 
+        {
+             
+            std::cout << " waiting for CMD " << std::endl; 
+        }
+
+
 }
+
+
+
 
 
 
@@ -56,7 +87,10 @@ void stateMachine::lowLevelDetectorCallBck(const std_msgs::Bool::ConstPtr& msg)
 
 }
 
-
+void stateMachine::takeOffCMDCallBck(const std_msgs::Bool::ConstPtr& msg)
+{
+    takeOffCMD = msg->data; 
+}
 
 
 void stateMachine::ClassifierCallBck(const std_msgs::Int8ConstPtr& msg) 

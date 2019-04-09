@@ -29,6 +29,7 @@ class stateMachine
     void publish( ros::Publisher somePUB, bool someBoolean); 
     void lowLevelDetectorCallBck(const std_msgs::Bool::ConstPtr& msg); 
     void ClassifierCallBck(const std_msgs::Int8ConstPtr& msg);  
+    void takeOffCMDCallBck(const std_msgs::Bool::ConstPtr& msg); 
 
 
 
@@ -39,9 +40,10 @@ class stateMachine
 
 
     private:  
-        bool detector; 
-        bool classifer; 
-        bool takeOff;  
+        bool detector = false; 
+        bool classifer = false; 
+        bool takeOffCMD = false;  
+
 
         ros::Publisher takeOffPUB =  n.advertise<std_msgs::Bool>("/stateMachine/takeOff", 2, true); 
         ros::Publisher areaSearchPUB = n.advertise<std_msgs::Bool>("/stateMachine/areaSearcher" ,2 , true);
