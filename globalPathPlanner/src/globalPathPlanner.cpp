@@ -231,7 +231,38 @@ void globalPathPlanner::msgCallback(const std_msgs::Bool::ConstPtr& msg)
   
 }
 
+void globalPathPlanner::takeOffCMDCallBck(const std_msgs::Bool::ConstPtr& msg)
+{
+    takeOffCMD = msg->data; 
+}
 
+
+void globalPathPlanner::takeOff()
+{
+
+    geometry_msgs::PoseStamped poseStamped; 
+
+    while(takeOffiterator <= 100)
+    {
+
+    
+    std::cout << "take sequence" << std::endl;
+    geometry_msgs::PoseStamped poseStamped; 
+    poseStamped.header.frame_id="take of seq"; 
+    poseStamped.header.stamp= ros::Time::now(); 
+
+    poseStamped.pose.position.x = takeOffiterator;
+    poseStamped.pose.position.y = takeOffiterator;
+    poseStamped.pose.position.z = takeOffiterator;
+     
+    poseStampedPub.publish(poseStamped);
+    takeOffiterator +=2;
+    }
+   
+   
+
+
+}
 
 
 

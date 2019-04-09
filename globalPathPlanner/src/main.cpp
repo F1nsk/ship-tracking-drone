@@ -48,7 +48,7 @@ int main(int argc, char **argv)
             } 
             else if (gp.run == true)
             {
-             
+             gp.takeOff(); 
              gp.publishPath(path);
              
             }

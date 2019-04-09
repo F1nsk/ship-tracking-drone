@@ -33,9 +33,9 @@ class globalPathPlanner
 
 public:
 
-
-    globalPathPlanner();
     bool run;
+    bool takeOffCMD; 
+    globalPathPlanner();
     void getPoint(vector<double> input);
     bool isSquare(coordinate a, coordinate b, coordinate c, coordinate d);
     vector<coordinate> flyincirkel(coordinate center, int radius, int numberOfPoints, bool show);
@@ -46,7 +46,9 @@ public:
     void printPath(vector<coordinate> somePath, bool showZ);
     void printCoordinate(coordinate someCoordinate, std::string someString); 
     void msgCallback(const std_msgs::Bool::ConstPtr& msg); 
+    void takeOffCMDCallBck(const std_msgs::Bool::ConstPtr& msg); 
     void publishPath(vector<coordinate> somePath);  
+    void takeOff();
 
     void subscriber(); 
     ros::NodeHandle n;
@@ -56,7 +58,8 @@ public:
 
 
 private:
-
+ 
+   
     coordinate pointOne;
     coordinate pointTwo;
     coordinate pointThree;
@@ -64,7 +67,7 @@ private:
     vector<coordinate> gridCoordinates; 
     ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("/position_controller/drone",2 , true);
     int interator = 1; 
-
+    int takeOffiterator = 1; 
 
 
 
