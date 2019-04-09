@@ -18,9 +18,9 @@ catkin_package(
 )
 
 set(SOURCES
-                src/globalPathPlanner.cpp
-                src/globalPathPlanner.hpp
-                src/main.cpp)
+                ship-tracking-drone/src/globalPathPlanner.cpp
+                ship-tracking-drone/src/globalPathPlanner.hpp
+                ship-tracking-drone/src/main.cpp)
 
 
 

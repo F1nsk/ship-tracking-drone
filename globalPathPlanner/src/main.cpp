@@ -4,7 +4,6 @@
 
 
 
-
 int main(int argc, char **argv)
 {
     
@@ -33,23 +32,29 @@ int main(int argc, char **argv)
     
     int i = 1;  
     
-    vector<coordinate>  path = gp.flyincirkel(center, 30, 500, true);
-    
-    ros::Rate loop_rate(10);
+    //vector<coordinate>  path = gp.flyincirkel(center, 30, 500, true);
+    vector<coordinate> path = gp.elipsiodPath(center, 50, 100, 50 );
     ros::Subscriber sub = gp.n.subscribe("/stateMachine/areaSearcher", 1, &globalPathPlanner::msgCallback, &gp ); 
+    ros::Rate loop_rate(10);
+
     while(ros::ok())
     {
             
-            if( gp.run != true)
+            if( gp.run == false)
             {
-            std::cout << "waiting" << std::endl; 
-            
            
+            std::cout << "waiting" << std::endl; 
             } 
-            else
+            else if (gp.run == true)
             {
-             std::cout  << " running " << std::endl; 
-             gp.publishPath(path); 
+             
+             gp.publishPath(path);
+             
+            }
+            else 
+            {
+
+                std::cout  << " still waiting" << std::endl; 
             }
             
             
@@ -59,7 +64,7 @@ int main(int argc, char **argv)
 
 
 
-            loop_rate.sleep();     
+            loop_rate.sleep();
             
             ros::spinOnce(); 
 

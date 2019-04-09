@@ -1,7 +1,6 @@
 
 
-#include<stateMachine.hpp> 
-
+#include"stateMachine.hpp"
 
 stateMachine::stateMachine()
 {
@@ -17,38 +16,38 @@ void stateMachine::stateChanger()
     int i =0; 
 
     
-    while(ros::ok)
-    {   
-        switch (state)
-        {
-            case 0:   //take off 
-            stateTakeOff(); 
-            break; 
+    // while(ros::ok)
+    // {   
+    //     switch (state)
+    //     {
+    //         case 0:   //take off 
+    //         stateTakeOff(); 
+    //         break; 
                 
               
 
-            case 1:  //searching 
+    //         case 1:  //searching 
         
             
 
 
 
 
-            case 2: //classify 
+    //         case 2: //classify 
 
 
 
 
-            case 4: //Track
+    //         case 4: //Track
 
 
                
 
-        }
+    //     }
 
 
 
-    }
+    //}
 
 }
 
@@ -119,9 +118,11 @@ void stateMachine::ClassifierCallBck(const std_msgs::Int8ConstPtr& msg)
 
 
 void stateMachine::publish(ros::Publisher somePUB, bool someBoolean)
-{
+{      
+    std_msgs::Bool tempMsg; 
+    tempMsg.data = someBoolean; 
 
-    somePUB.publish(someBoolean); 
+    somePUB.publish(tempMsg); 
 
 }
 

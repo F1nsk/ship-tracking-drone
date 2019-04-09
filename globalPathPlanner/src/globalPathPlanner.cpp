@@ -122,6 +122,23 @@ void globalPathPlanner::printCoordinate(coordinate someCoordinate, std::string s
 }
 
 
+vector<coordinate> globalPathPlanner::elipsiodPath(coordinate center, int r1, int r2, int numberOfPoints)
+{   
+            coordinate temp;
+             vector<coordinate> path;
+         for(double angle=0; angle<=2*pi; angle+=2*pi/numberOfPoints)
+            {
+                temp.x = center.x + r1 * cos(angle); 
+                temp.y = center.y + r2 * sin(angle);
+                path.push_back(temp);
+
+            }
+    
+    return path; 
+
+}
+
+
 
 vector<coordinate> globalPathPlanner::flyincirkel(coordinate center, int radius, int numberOfPoints, bool show)
 {
@@ -131,7 +148,7 @@ vector<coordinate> globalPathPlanner::flyincirkel(coordinate center, int radius,
 
     coordinate temp;
     vector<coordinate> path;
-    int i;
+   
 
     for(double angle=0; angle<=2*pi; angle+=2*pi/numberOfPoints)
     {
@@ -140,8 +157,7 @@ vector<coordinate> globalPathPlanner::flyincirkel(coordinate center, int radius,
        temp.y = center.y + radius*sin(angle);
        temp.z = center.z;
        path.push_back(temp);
-       i++;
-
+       
 
     }
      if(show == true)
@@ -221,22 +237,39 @@ void globalPathPlanner::msgCallback(const std_msgs::Bool::ConstPtr& msg)
 
 void globalPathPlanner::publishPath(vector<coordinate> somePath)
 {
+    ros::Rate my_loop_rate(10);
+             
+    std::cout  << " running " << std::endl; 
+
     geometry_msgs::PoseStamped poseStamped; 
     poseStamped.header.frame_id="droneWayPoint"; 
     poseStamped.header.stamp= ros::Time::now(); 
-
-    for(int i; i = somePath.size(); i++)
-    {
-    poseStamped.pose.position.x = somePath.at(i).x; 
-    poseStamped.pose.position.y = somePath.at(i).y; 
+   
+    //std::cout << "path size" << somePath.size() << std::endl;
+    //printPath(somePath, true);
+    
+    std::cout <<" debug here" << std::endl; 
+    poseStamped.pose.position.x = somePath.at(interator).x; 
+    poseStamped.pose.position.y = somePath.at(interator).y; 
     poseStamped.pose.position.z = 100; 
-    poseStamped.pose.orientation.z =atan2(somePath.at(i).x, somePath.at(i).y);
+    poseStamped.pose.orientation.z =atan2(somePath.at(interator).x, somePath.at(interator).y);
 
+     
+    
+
+     poseStampedPub.publish(poseStamped); 
+
+     interator +=1; 
+     if (interator >= somePath.size())
+     {
+         interator = 0; 
+     }
         
             
-    poseStampedPub.publish(poseStamped); 
+  
+   
 
-    } 
+    
 
 
 

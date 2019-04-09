@@ -18,11 +18,9 @@ catkin_package(
 )
 
 set(SOURCES
-                src/stateMachine.cpp
-                src/stateMachine.hpp
-                src/state.cpp
-                src/state.hpp
-                src/main.cpp)
+              src/stateMachine.cpp
+              src/stateMachine.hpp
+              src/main.cpp)
 
 
 
@@ -35,7 +33,7 @@ include_directories(
 )
 
 
-add_executable(stateMachine_node src/main.cpp src/stateMachine.cpp src/state.cpp)
+add_executable(stateMachine_node src/main.cpp src/stateMachine.cpp )
 target_link_libraries( stateMachine_node 
                           ${catkin_LIBRARIES}
                           )

@@ -40,16 +40,17 @@ public:
     bool isSquare(coordinate a, coordinate b, coordinate c, coordinate d);
     vector<coordinate> flyincirkel(coordinate center, int radius, int numberOfPoints, bool show);
     vector<coordinate> generateMap(coordinate a, coordinate b, coordinate c, coordinate d, double gridResolution);
+    vector<coordinate> elipsiodPath(coordinate center, int r1, int r2,  int numberOfPoints); 
     void generatePath(coordinate a, coordinate b, coordinate c, coordinate d); 
     int calcDist(coordinate a, coordinate b); 
     void printPath(vector<coordinate> somePath, bool showZ);
     void printCoordinate(coordinate someCoordinate, std::string someString); 
     void msgCallback(const std_msgs::Bool::ConstPtr& msg); 
     void publishPath(vector<coordinate> somePath);  
-    void subscriber(); 
-    ros::NodeHandle n; 
-    
 
+    void subscriber(); 
+    ros::NodeHandle n;
+   
     ~globalPathPlanner();
 
 
@@ -61,8 +62,10 @@ private:
     coordinate pointThree;
     coordinate pointFour;
     vector<coordinate> gridCoordinates; 
-    
     ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("/position_controller/drone",2 , true);
+    int interator = 0; 
+
+
 
 
 
