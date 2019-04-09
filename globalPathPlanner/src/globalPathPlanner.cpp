@@ -248,11 +248,11 @@ void globalPathPlanner::publishPath(vector<coordinate> somePath)
     //std::cout << "path size" << somePath.size() << std::endl;
     //printPath(somePath, true);
     
-    std::cout <<" debug here" << std::endl; 
+    // std::cout <<" debug here" << std::endl; 
     poseStamped.pose.position.x = somePath.at(interator).x; 
     poseStamped.pose.position.y = somePath.at(interator).y; 
     poseStamped.pose.position.z = 100; 
-    poseStamped.pose.orientation.z =atan2(somePath.at(interator).x, somePath.at(interator).y);
+    poseStamped.pose.orientation.z =pi + atan2(somePath.at(interator).y - somePath.at(interator -1).y, somePath.at(interator).x - somePath.at(interator -1).x);
 
      
     
@@ -262,7 +262,7 @@ void globalPathPlanner::publishPath(vector<coordinate> somePath)
      interator +=1; 
      if (interator >= somePath.size())
      {
-         interator = 0; 
+         interator = 1; 
      }
         
             

@@ -43,6 +43,7 @@ class stateMachine
         bool classifer; 
         bool takeOff;  
 
+        ros::Publisher takeOffPUB =  n.advertise<std_msgs::Bool>("/stateMachine/takeOff", 2, true); 
         ros::Publisher areaSearchPUB = n.advertise<std_msgs::Bool>("/stateMachine/areaSearcher" ,2 , true);
         ros::Publisher classifierPUB = n.advertise<std_msgs::Bool>("/stateMachine/classifier", 2 , true); 
         ros::Publisher lowLevelDetectorPUB  = n.advertise<std_msgs::Bool>("/stateMachine/lowLevelDetector",2 , true); 

@@ -12,43 +12,7 @@ stateMachine::stateMachine()
 
 void stateMachine::stateChanger()
 {   
-    int state = 0;
-    int i =0; 
-
     
-    // while(ros::ok)
-    // {   
-    //     switch (state)
-    //     {
-    //         case 0:   //take off 
-    //         stateTakeOff(); 
-    //         break; 
-                
-              
-
-    //         case 1:  //searching 
-        
-            
-
-
-
-
-    //         case 2: //classify 
-
-
-
-
-    //         case 4: //Track
-
-
-               
-
-    //     }
-
-
-
-    //}
-
 }
 
 

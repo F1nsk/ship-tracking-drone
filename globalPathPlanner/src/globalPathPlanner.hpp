@@ -63,7 +63,7 @@ private:
     coordinate pointFour;
     vector<coordinate> gridCoordinates; 
     ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("/position_controller/drone",2 , true);
-    int interator = 0; 
+    int interator = 1; 
 
 
 
