@@ -10,7 +10,6 @@
 #include <std_msgs/Int8.h>
 
 
-
 class stateMachine
 {
 
@@ -43,13 +42,13 @@ class stateMachine
         bool detector = false; 
         bool classifer = false; 
         bool takeOffCMD = false;  
+        int StateNumber = 0; 
 
-
-        ros::Publisher takeOffPUB =  n.advertise<std_msgs::Bool>("/stateMachine/takeOff", 2, true); 
-        ros::Publisher areaSearchPUB = n.advertise<std_msgs::Bool>("/stateMachine/areaSearcher" ,2 , true);
-        ros::Publisher classifierPUB = n.advertise<std_msgs::Bool>("/stateMachine/classifier", 2 , true); 
-        ros::Publisher lowLevelDetectorPUB  = n.advertise<std_msgs::Bool>("/stateMachine/lowLevelDetector",2 , true); 
-        ros::Publisher trackerDetectorPUB  = n.advertise<std_msgs::Bool>("/stateMachine/track", 2, true );
+        ros::Publisher takeOffPUB =  n.advertise<std_msgs::Bool>("/stateMachine/takeOff/trigger", 2, true); 
+        ros::Publisher areaSearchPUB = n.advertise<std_msgs::Bool>("/stateMachine/areaSearcher/trigger" ,2 , true);
+        ros::Publisher classifierPUB = n.advertise<std_msgs::Bool>("/stateMachine/classifier/trigger", 2 , true); 
+        ros::Publisher lowLevelDetectorPUB  = n.advertise<std_msgs::Bool>("/stateMachine/lowLevelDetector/trigger",2 , true); 
+        ros::Publisher trackerDetectorPUB  = n.advertise<std_msgs::Bool>("/stateMachine/track/trigger", 2, true );
         
 
 

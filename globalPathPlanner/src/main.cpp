@@ -35,7 +35,7 @@ int main(int argc, char **argv)
     vector<coordinate>  path = gp.flyincirkel(center, 30, 500, true);
     vector<coordinate> pathElip = gp.elipsiodPath(center, 50, 100, 50 );
    // vector<coordinate>  pathGrid = gp.generatePath(one, two, three, four); 
-    ros::Subscriber sub = gp.n.subscribe("/stateMachine/areaSearcher", 1, &globalPathPlanner::msgCallback, &gp ); 
+    ros::Subscriber sub = gp.n.subscribe("/stateMachine/areaSearcher/trigger", 1, &globalPathPlanner::msgCallback, &gp ); 
     ros::Rate loop_rate(10);
 
     while(ros::ok())

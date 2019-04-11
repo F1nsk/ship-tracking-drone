@@ -13,32 +13,61 @@ stateMachine::stateMachine()
 void stateMachine::stateChanger()
 {   
     
-        if(takeOffCMD == true)
-        {
+    switch(StateNumber)
+    {   
+        case 0:
             stateTakeOff(); 
+            std::cout << " waiting for CMD " << std::endl;
+            break; 
+
+        case 1: 
             stateSearching(); 
             std::cout << " taking off, starting search" << std::endl; 
-        }
-        else  if(detector == true)
-        {
+            break; 
+        case 2:
             stateClassify(); 
             std::cout << " starting classifier" << std::endl; 
-        }
-        else if( classifer != true)
-        {
-            //continue searching 
-            std::cout << " not of interest continuing " << std::endl; 
-        }
-        else if(classifer == true)
-        {
+            break; 
+
+        case 3:
+             std::cout << " not of interest continuing " << std::endl; 
+            break; 
+
+        case 4: 
             stateTrack(); 
             std::cout << "of interest - tracking" << std::endl; 
-        }
-        else 
-        {
+            break; 
+
+
+    }
+
+
+        // if(takeOffCMD == true)
+        // {
+        //     stateTakeOff(); 
+        //     stateSearching(); 
+        //     std::cout << " taking off, starting search" << std::endl; 
+        // }
+        // else  if(detector == true)
+        // {
+        //     stateClassify(); 
+        //     std::cout << " starting classifier" << std::endl; 
+        // }
+        // else if( classifer != true)
+        // {
+        //     //continue searching 
+        //     std::cout << " not of interest continuing " << std::endl; 
+        // }
+        // else if(classifer == true)
+        // {
+        //     stateTrack(); 
+        //     std::cout << "of interest - tracking" << std::endl; 
+        // }
+        // else 
+        // {
              
-            std::cout << " waiting for CMD " << std::endl; 
-        }
+        //     std::cout << " waiting for CMD " << std::endl; 
+        // }
 
 
 }
@@ -84,12 +113,25 @@ void stateMachine::lowLevelDetectorCallBck(const std_msgs::Bool::ConstPtr& msg)
 
     lowLevelDetection = msg->data; 
 
+    if(lowLevelDetection == true)
+    {
+        StateNumber = 2; 
+    }
+
 
 }
 
 void stateMachine::takeOffCMDCallBck(const std_msgs::Bool::ConstPtr& msg)
 {
     takeOffCMD = msg->data; 
+
+    if(takeOffCMD == true)
+    {
+        StateNumber = 1; 
+    }
+
+
+
 }
 
 
@@ -107,6 +149,15 @@ void stateMachine::ClassifierCallBck(const std_msgs::Int8ConstPtr& msg)
             highLevelDection = false; 
         }
     
+    if(highLevelDection == true)
+    {
+        StateNumber = 4;  
+    }
+
+    if(highLevelDection == false)
+    {
+        StateNumber = 1; 
+    }
 
 }
 
