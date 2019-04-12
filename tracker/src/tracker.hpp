@@ -52,7 +52,7 @@ class tracker
     ~tracker(); 
 
     private:
-        gpsCoordinate     
+        // gpsCoordinate    
 
 
 

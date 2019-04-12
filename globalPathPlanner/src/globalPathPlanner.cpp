@@ -175,11 +175,16 @@ vector<coordinate> globalPathPlanner::flyincirkel(coordinate center, int radius,
 
 vector<coordinate> globalPathPlanner::generateMap(coordinate a, coordinate b, coordinate c, coordinate d, double gridResolution)
 {
-     coordinate temp; 
+        
      vector<coordinate> coordList;
+     
      vector<coordinate> removeMe; 
      coordinate tempC =  c;
      double gridRes = gridResolution; 
+     int y = 0; 
+     int x = 0; 
+     int i,j;
+     
 
      
      
@@ -191,15 +196,35 @@ vector<coordinate> globalPathPlanner::generateMap(coordinate a, coordinate b, co
         // int numberOfPtsShortSide = distThree/gridRes; 
      
 
-        for(double i = 0; i <= b.x; i+= gridRes)
+        for(i = 0; i <= d.y; i+=gridRes)
         {
-        for(double j= 0; j <= b.y; j+= gridRes)
-                {
-                temp.x = c.x + i ;
-                temp.y = c.y + j;
+          coordinate temp;
+            temp.x = c.y +i; 
+            
+            for(j = 0; j <= a.x; j+=gridRes)
+            {
+                
+              
+                temp.y = c.x +j; 
+                //coordList.resize()
                 coordList.push_back(temp); 
-                } 
+            }
         }
+
+
+        // temp.x = a.x;
+        // temp.y = a.y;
+        // for(i = 0; i <= b.x; i+= gridRes){
+        //     temp.x += 1;
+        //     for(j = 0; j <= b.x; j+= gridRes)
+        //     {
+        //         temp.y = i % 2 == 0 ? temp.y - 1 : temp.y + 1;
+        //         cout << temp.x << " " << temp.y << endl;
+        //         //temp.x = c.x + i ;
+        //         //temp.y = c.y + j;
+        //         coordList.push_back(temp); 
+        //     } 
+        // }
 
 
         // for(int i = gridRes; i=b.x; i+gridRes)
@@ -209,17 +234,11 @@ vector<coordinate> globalPathPlanner::generateMap(coordinate a, coordinate b, co
         //      gridCoordinates.push_back(temp);
 
         // }
-        printPath(coordList, true); 
+       // printPath(coordList, true); 
 
         std::cout <<  " done "  << std::endl; 
          
-
         return(coordList); 
-     
-
-    
-
-
 
 };
 

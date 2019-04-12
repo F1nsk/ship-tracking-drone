@@ -41,7 +41,7 @@ public:
     vector<coordinate> flyincirkel(coordinate center, int radius, int numberOfPoints, bool show);
     vector<coordinate> generateMap(coordinate a, coordinate b, coordinate c, coordinate d, double gridResolution);
     vector<coordinate> elipsiodPath(coordinate center, int r1, int r2,  int numberOfPoints); 
-    void generatePath(coordinate a, coordinate b, coordinate c, coordinate d); 
+   
     int calcDist(coordinate a, coordinate b); 
     void printPath(vector<coordinate> somePath, bool showZ);
     void printCoordinate(coordinate someCoordinate, std::string someString); 
