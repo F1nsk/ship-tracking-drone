@@ -38,6 +38,9 @@ void stateMachine::stateChanger()
             std::cout << "of interest - tracking" << std::endl; 
             break; 
 
+        default: std::cout << "default \n"  << std::endl; 
+            break;     
+
 
     }
 

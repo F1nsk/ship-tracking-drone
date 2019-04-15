@@ -27,7 +27,7 @@ int main(int argc, char **argv)
         sm.stateChanger(); 
         loop_rate.sleep();
             
-        ros::spinOnce(); 
+        ros::spin(); 
 
     }
 
