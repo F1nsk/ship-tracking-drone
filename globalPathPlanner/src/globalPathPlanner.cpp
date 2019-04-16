@@ -257,9 +257,8 @@ vector<coordinate> globalPathPlanner::generateMap(coordinate a, coordinate b, co
         //      temp.x = a.x + gridRes;
         //      temp.y = a.y;
         //      gridCoordinates.push_back(temp);
-
         // }
-        printPath(coordList, true); 
+        // printPath(coordList, true); 
 
 
         std::cout <<  " nr of cols " << numberOfcol  << std::endl; 
@@ -301,6 +300,7 @@ void globalPathPlanner::takeOff()
     poseStamped.pose.position.z = takeOffiterator;
      
     poseStampedPub.publish(poseStamped);
+
     takeOffiterator +=2;
     }
    
