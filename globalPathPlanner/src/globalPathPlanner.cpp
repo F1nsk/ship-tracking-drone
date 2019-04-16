@@ -181,9 +181,12 @@ vector<coordinate> globalPathPlanner::generateMap(coordinate a, coordinate b, co
      vector<coordinate> removeMe; 
      coordinate tempC =  c;
      double gridRes = gridResolution; 
+     int numberOfcol = 0; 
      int y = 0; 
      int x = 0; 
      int i,j;
+     
+    
      
 
      
@@ -195,21 +198,43 @@ vector<coordinate> globalPathPlanner::generateMap(coordinate a, coordinate b, co
         // int numberOfPtsLongSide = distOne/gridRes;  
         // int numberOfPtsShortSide = distThree/gridRes; 
      
-
-        for(i = 0; i <= d.y; i+=gridRes)
+       
+        for(i = 0; i <= d.x; i+=gridRes)
         {
           coordinate temp;
-            temp.x = c.y +i; 
+            temp.z = a.z; 
+            temp.x = c.x +i; 
             
-            for(j = 0; j <= a.x; j+=gridRes)
-            {
-                
-              
-                temp.y = c.x +j; 
-                //coordList.resize()
-                coordList.push_back(temp); 
+            
+
+
+                if(numberOfcol %  2 == 0)
+                {
+                    for(j = 0; j <= a.y; j++)
+                    {
+                         temp.y = c.y +j;
+                         coordList.push_back(temp); 
+ 
+                    }
+                    numberOfcol +=1; 
+
+                }
+                else 
+                {
+                     for(j = 0; j <= a.y; j++)
+                    {
+                         temp.y = a.y -j; 
+                         coordList.push_back(temp); 
+
+                    }
+                    numberOfcol +=1; 
+                }
+        
+            
+                // coordList.push_back(temp); 
+                 
             }
-        }
+        
 
 
         // temp.x = a.x;
@@ -234,9 +259,10 @@ vector<coordinate> globalPathPlanner::generateMap(coordinate a, coordinate b, co
         //      gridCoordinates.push_back(temp);
 
         // }
-       // printPath(coordList, true); 
+        printPath(coordList, true); 
 
-        std::cout <<  " done "  << std::endl; 
+
+        std::cout <<  " nr of cols " << numberOfcol  << std::endl; 
          
         return(coordList); 
 
@@ -301,7 +327,7 @@ void globalPathPlanner::publishPath(vector<coordinate> somePath)
     // std::cout <<" debug here" << std::endl; 
     poseStamped.pose.position.x = somePath.at(interator).x; 
     poseStamped.pose.position.y = somePath.at(interator).y; 
-    poseStamped.pose.position.z = 100; 
+    poseStamped.pose.position.z = somePath.at(interator).z; 
     poseStamped.pose.orientation.z =pi + atan2(somePath.at(interator).y - somePath.at(interator -1).y, somePath.at(interator).x - somePath.at(interator -1).x);
 
      
