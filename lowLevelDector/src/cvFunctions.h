@@ -10,6 +10,16 @@
 #include <iostream>
 #include "stdio.h"
 #include <std_msgs/Bool.h>
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
+#include <sensor_msgs/image_encodings.h> 
+#include <sensor_msgs/Image.h> 
+#include <std_msgs/Bool.h>
+#include <std_msgs/String.h> 
+#include <sensor_msgs/image_encodings.h> 
+#include <opencv2/opencv.hpp>
+#include <sstream> 
+using namespace cv;
 
 using namespace cv;
 
@@ -33,9 +43,22 @@ public:
  int numberOfBlackPixels(cv::Mat img);
  bool notWater(cv::Mat img); 
  std_msgs::Bool boolMsg; 
+ bool run;
+ void imageCallback(const sensor_msgs::ImageConstPtr& imgMsg);
+ ros::NodeHandle nH;
+ 
+ image_transport::ImageTransport it; 
+ void msgCallback(const std_msgs::Bool::ConstPtr& msg); 
+ void imagPublisher(cv::Mat img);  
+
+
+
+
+
 
  ~cvFunctions();
 private:
+  
  cv::Mat edgeImg;
  cv::Mat greyScaleImg;
  cv::Mat cedge;
@@ -51,6 +74,8 @@ private:
  std::vector<DMatch> goodMatches;
  int totalNumberOfPixels;
  int blackPixels;
+ ros::Publisher pub = nH.advertise<std_msgs::Bool>("low_lvl_detector", 500); 
+ image_transport::Publisher imagePub; 
 
 
 

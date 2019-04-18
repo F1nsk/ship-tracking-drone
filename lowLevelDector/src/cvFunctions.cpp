@@ -1,7 +1,7 @@
 #include "cvFunctions.h"
 
 
-cvFunctions::cvFunctions()
+cvFunctions::cvFunctions():it(nH)
 {
 
 }
@@ -122,9 +122,11 @@ cv::Mat cvFunctions::backproj(cv::Mat img)
     cv::normalize( hist, hist, 0, 255, NORM_MINMAX, -1, Mat() );
     Mat backproj;
     cv::calcBackProject( &hue, 1, 0, hist, backproj, &ranges, 1, true );
-    //cv::namedWindow("BackProj", WINDOW_NORMAL);
-    //imshow( "BackProj", backproj );
-    //resizeWindow( "BackProj", 300,300);
+    // cv::namedWindow("BackProj", WINDOW_NORMAL);
+    // imshow( "BackProj", backproj );
+    // resizeWindow( "BackProj", 300,300);
+    
+
     int w = 400, h = 400;
     int bin_w = cvRound( (double) w / histSize );
     Mat histImg = Mat::zeros( h, w, CV_8UC3 );
@@ -175,6 +177,8 @@ int cvFunctions::numberOfBlackPixels(cv::Mat img) //function to count the number
 bool cvFunctions::notWater(cv::Mat img) //function which return wether or not water has been detected function.
 {
        cv::Mat temp = img;
+       imagPublisher(temp);
+
        numberOfBlackPixels(backproj(temp));
        std::cout << "num " <<  blackPixels << std::endl;
 
@@ -182,6 +186,7 @@ bool cvFunctions::notWater(cv::Mat img) //function which return wether or not wa
         {
             std::cout << "not water " << std::endl;
             boolMsg.data =true; 
+            pub.publish(boolMsg); 
             return 1;
 
         }
@@ -189,6 +194,7 @@ bool cvFunctions::notWater(cv::Mat img) //function which return wether or not wa
         {
             std::cout << "water" << std::endl;
             boolMsg.data = false; 
+            pub.publish(boolMsg); 
             return 0;
 
         }
@@ -196,6 +202,52 @@ bool cvFunctions::notWater(cv::Mat img) //function which return wether or not wa
 
 
 };
+
+void cvFunctions::imagPublisher(cv::Mat img)
+{
+    cv::Mat temp = img; 
+    sensor_msgs::ImagePtr imgMsg;
+    imgMsg = cv_bridge::CvImage(std_msgs::Header(), "BGR8", temp).toImageMsg(); 
+    imagePub.publish(imgMsg);
+
+
+}
+
+
+
+void cvFunctions::imageCallback(const sensor_msgs::ImageConstPtr& imgMsg)
+{
+
+   cv_bridge::CvImagePtr img_ptr;  
+   cv::Mat imgRGB; 
+ 
+  try
+  {
+     
+   
+
+    img_ptr = cv_bridge::toCvCopy(imgMsg, sensor_msgs::image_encodings::BGR8); 
+    imgRGB = img_ptr->image;
+    notWater(imgRGB);	
+
+    
+    //cv::imshow("view", imgRGB);
+    //cv::waitKey(10);
+  }
+  catch (cv_bridge::Exception& e)
+  {
+    ROS_ERROR("Could not convert from '%s' to 'bgr8'.", imgMsg->encoding.c_str());
+  }
+}
+
+
+
+
+void cvFunctions::msgCallback(const std_msgs::Bool::ConstPtr& msg)
+{
+   run =  msg->data; 
+  
+}
 
 
 cvFunctions::~cvFunctions()
