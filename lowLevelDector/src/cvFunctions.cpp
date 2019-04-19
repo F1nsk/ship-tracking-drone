@@ -125,7 +125,8 @@ cv::Mat cvFunctions::backproj(cv::Mat img)
     // cv::namedWindow("BackProj", WINDOW_NORMAL);
     // imshow( "BackProj", backproj );
     // resizeWindow( "BackProj", 300,300);
-    
+    imagPublisher(backproj);
+
 
     int w = 400, h = 400;
     int bin_w = cvRound( (double) w / histSize );
@@ -177,27 +178,32 @@ int cvFunctions::numberOfBlackPixels(cv::Mat img) //function to count the number
 bool cvFunctions::notWater(cv::Mat img) //function which return wether or not water has been detected function.
 {
        cv::Mat temp = img;
-       imagPublisher(temp);
+       if( run == true)
+            {
+                numberOfBlackPixels(backproj(temp));
+                std::cout << "num " <<  blackPixels << std::endl;
 
-       numberOfBlackPixels(backproj(temp));
-       std::cout << "num " <<  blackPixels << std::endl;
+                 if(blackPixels > pixelThresh)
+                    {
+                          std::cout << "not water " << std::endl;
+                          boolMsg.data =true; 
+                          pub.publish(boolMsg); 
+                          return 1;
 
-        if(blackPixels > pixelThresh)
-        {
-            std::cout << "not water " << std::endl;
-            boolMsg.data =true; 
-            pub.publish(boolMsg); 
-            return 1;
+                    }
+                    else
+                    {
+                        std::cout << "water" << std::endl;
+                        boolMsg.data = false; 
+                        pub.publish(boolMsg); 
+                        return 0;
 
-        }
-        else
-        {
-            std::cout << "water" << std::endl;
-            boolMsg.data = false; 
-            pub.publish(boolMsg); 
-            return 0;
-
-        }
+                    }
+            }
+        else 
+            {
+              std::cout << " low detector not active \n";  
+            }
 
 
 
@@ -207,7 +213,7 @@ void cvFunctions::imagPublisher(cv::Mat img)
 {
     cv::Mat temp = img; 
     sensor_msgs::ImagePtr imgMsg;
-    imgMsg = cv_bridge::CvImage(std_msgs::Header(), "BGR8", temp).toImageMsg(); 
+    imgMsg = cv_bridge::CvImage(std_msgs::Header(), "mono8", temp).toImageMsg(); 
     imagePub.publish(imgMsg);
 
 

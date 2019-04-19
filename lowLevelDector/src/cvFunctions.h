@@ -25,14 +25,17 @@ using namespace cv;
 
 static int edgeThresh = 15; // edge detection threshhold
 static int minHessian = 400;
-static int pixelThresh = 300; // threshhold witch
+static int pixelThresh = 3; // threshhold witch
+
 static int bins = 3;
 const float ratioThresh =  0.7f;
 
 class cvFunctions
 {
 public:
+
  cvFunctions();
+
  void test();
  cv::Mat importImg(std::string pathToImage);
  void edgeDetection(cv::Mat img);
@@ -43,7 +46,7 @@ public:
  int numberOfBlackPixels(cv::Mat img);
  bool notWater(cv::Mat img); 
  std_msgs::Bool boolMsg; 
- bool run;
+ bool run =false;
  void imageCallback(const sensor_msgs::ImageConstPtr& imgMsg);
  ros::NodeHandle nH;
  
@@ -75,8 +78,7 @@ private:
  int totalNumberOfPixels;
  int blackPixels;
  ros::Publisher pub = nH.advertise<std_msgs::Bool>("low_lvl_detector", 500); 
- image_transport::Publisher imagePub; 
-
+ image_transport::Publisher imagePub = it.advertise("/lowLeveldetector/image_feed", 1);
 
 
 

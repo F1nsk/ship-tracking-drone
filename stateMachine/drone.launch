@@ -1,0 +1,11 @@
+<launch>
+    <node name="low_level_detector_node" pkg="lowLevelDetector" type="low_level_detector_node"/>
+    <node name="stateMachine_node" pkg="stateMachine" type="stateMachine_node" output="screen"/>
+    <node name="globalPathPlanner_node" pkg="globalPathPlanner" type="globalPathPlanner_node"/>
+    <node name="tracker_node" pkg="tracker" type="tracker_node" />
+</launch>
+
+    
+
+    
+

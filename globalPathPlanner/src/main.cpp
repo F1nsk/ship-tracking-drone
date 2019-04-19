@@ -44,7 +44,7 @@ int main(int argc, char **argv)
             if( gp.run == false)
             {
            
-            std::cout << "waiting" << std::endl; 
+            std::cout << " global path planner not active" << std::endl; 
             } 
             else if (gp.run == true)
             {
