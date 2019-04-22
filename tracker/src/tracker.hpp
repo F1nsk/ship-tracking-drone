@@ -6,7 +6,7 @@
 #include <ros/ros.h>
 #include <vector> 
 
-
+const double pi = 3.14159;
 
 
 struct coordinate
@@ -23,6 +23,7 @@ struct gpsCoordinate
     double latitude;
     double longitude;
     double altitude;
+
      
 };
 
@@ -38,7 +39,6 @@ class tracker
     void gpsCallBck(const sensor_msgs::NavSatFix::ConstPtr& msg); 
     coordinate calcCenterPoint(coordinate min, coordinate max); 
     coordinate GPStoCartisian(coordinate GPS); 
-    void trackingPath(coordinate, int boatLenght); 
     std::vector< std::vector<double> > getYawMatrix( int yawAngle_); 
     std::vector <std::vector <double>> getPitchMatrix(int pitchAngle_); 
     std::vector <std::vector <double>> getRollMatrix(int rollAngle_);
@@ -47,6 +47,9 @@ class tracker
     std::vector < std::vector < double >> multiplyMatrix(std::vector<std::vector< double>> matrixA_, std::vector<std::vector< double>> matrixB_);
     std::vector < std::vector < double >> transpose(std::vector< std::vector< double>> matrix_); 
     void printMatrix(std::vector<std::vector<double>> matrix_);
+    void trackingPath(coordinate center, int radius); 
+    ros::NodeHandle n;
+    void publistPath(std::vector<coordinate> somePath); 
 
       
 
@@ -68,6 +71,8 @@ class tracker
         double f = 4651.16; //forcal lenght?  
         double sensorW = 5456/2; // sensor width in pixels
         double sensorH = 3064/2; // sensor height in pixels
+        ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("/position_controller/drone",50 , true);
+
 
         
         // gpsCoordinate    

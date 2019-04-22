@@ -187,6 +187,67 @@ std::vector<std::vector<double> >tracker::transpose(std::vector<std::vector<doub
 }
 
 
+void tracker::trackingPath(coordinate center, int radius)
+{
+    /* This function creates a circular flight path for a plane from center point and a radius
+     *
+     */
+
+    coordinate temp;
+    std::vector<coordinate> path;
+    int numberOfPoints = 300; 
+   
+
+    for(double angle=0; angle<=2*pi; angle+=2*pi/numberOfPoints)
+    {
+
+       temp.x = center.x+ radius*cos(angle);
+       temp.y = center.y + radius*sin(angle);
+       temp.z = center.z;
+       path.push_back(temp);
+       
+
+    }
+
+    publistPath(path); 
+    
+
+};
+
+void tracker::publistPath(std::vector<coordinate> somePath)
+{
+    ros::Rate my_loop_rate(10);
+             
+    std::cout  << " running " << std::endl; 
+    int interator; 
+    geometry_msgs::PoseStamped poseStamped; 
+    poseStamped.header.frame_id="droneWayPoint"; 
+    poseStamped.header.stamp= ros::Time::now(); 
+   
+    //std::cout << "path size" << somePath.size() << std::endl;
+    //printPath(somePath, true);
+    
+    // std::cout <<" debug here" << std::endl; 
+    poseStamped.pose.position.x = somePath.at(interator).x; 
+    poseStamped.pose.position.y = somePath.at(interator).y; 
+    poseStamped.pose.position.z = somePath.at(interator).z; 
+    poseStamped.pose.orientation.z =pi + atan2(somePath.at(interator).y - somePath.at(interator -1).y, somePath.at(interator).x - somePath.at(interator -1).x);
+
+     
+    
+
+     poseStampedPub.publish(poseStamped); 
+
+     interator +=1; 
+     if (interator >= somePath.size())
+     {
+         interator = 1; 
+     }
+        
+   
+
+
+}
 
 
 tracker::~tracker()
