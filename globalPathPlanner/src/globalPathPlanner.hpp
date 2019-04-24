@@ -41,10 +41,12 @@ public:
     vector<coordinate> flyincirkel(coordinate center, int radius, int numberOfPoints, bool show);
     vector<coordinate> generateMap(coordinate a, coordinate b, coordinate c, coordinate d, double gridResolution);
     vector<coordinate> elipsiodPath(coordinate center, int r1, int r2,  int numberOfPoints); 
-   
+    vector<coordinate> randomwElip(coordinate center); 
+
     int calcDist(coordinate a, coordinate b); 
     void printPath(vector<coordinate> somePath, bool showZ);
     void printCoordinate(coordinate someCoordinate, std::string someString); 
+    
     void msgCallback(const std_msgs::Bool::ConstPtr& msg); 
     void takeOffCMDCallBck(const std_msgs::Bool::ConstPtr& msg); 
     void publishPath(vector<coordinate> somePath);  
@@ -65,7 +67,7 @@ private:
     coordinate pointThree;
     coordinate pointFour;
     vector<coordinate> gridCoordinates; 
-    ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("/position_controller/drone",50 , true);
+    ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("/position_controller/boat",50 , true);
     int interator = 1; 
     int takeOffiterator = 1; 
 

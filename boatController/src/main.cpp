@@ -12,26 +12,25 @@ int main(int argc, char **argv)
 
     
     
-    
-    ros::init( argc, argv, "pathplanner");
+    int r1 = std::rand() % 50 + 450; 
+    int r2 = std::rand() % 50 +  450;  
+    ros::init( argc, argv, "boatController");
     
     coordinate center = {500, 500};
     boatcontroller boatC;
 
-    vector<coordinate> path = boatC.elipsiodPath(center); 
-
+    vector<coordinate> path = boatC.elipsiodPath(center, 100, 500); 
     ros::Rate loop_rate(10);
 
-    int i = 1;  
     
 
     while(ros::ok())
     {
-     
+        
             
-            
+                    
 
-            boatC.publishPath(path);
+            boatC.publishPathBoat(path);
 
 
 

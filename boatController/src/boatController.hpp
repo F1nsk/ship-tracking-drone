@@ -7,13 +7,12 @@
 #include <cmath>
 #include <string> 
 #include "ros/ros.h"
-#include <geometry_msgs/PointStamped.h>
 #include <geometry_msgs/PoseStamped.h> 
 #include <std_msgs/Bool.h> 
 #include <sstream> 
 
 const double pi = 3.14159;
-
+ 
 
 using namespace std;
 
@@ -36,13 +35,11 @@ public:
     
     boatcontroller();
   
-    vector<coordinate> elipsiodPath(coordinate center); 
+    vector<coordinate> elipsiodPath(coordinate center, int r1 , int r2); 
     
     
-    void publishPath(vector<coordinate> somePath);  
-
+    void publishPathBoat(vector<coordinate> somePath);  
     ros::NodeHandle n;
-   
     ~boatcontroller();
 
 
@@ -50,7 +47,7 @@ public:
 private:
  
   
-    ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("/position_controller/boat",50 , true);
+    ros::Publisher poseStampedPubBoat = n.advertise<geometry_msgs::PoseStamped>("/position_controller/boat",50 , true);
     int interator = 1; 
     int takeOffiterator = 1; 
 

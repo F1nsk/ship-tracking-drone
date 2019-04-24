@@ -130,6 +130,7 @@ vector<coordinate> globalPathPlanner::elipsiodPath(coordinate center, int r1, in
             {
                 temp.x = center.x + r1 * cos(angle); 
                 temp.y = center.y + r2 * sin(angle);
+                temp.z = center.z; 
                 path.push_back(temp);
 
             }
@@ -309,6 +310,28 @@ void globalPathPlanner::takeOff()
 
 }
 
+vector<coordinate>  globalPathPlanner::randomwElip(coordinate center)
+{          
+    int r1 = std::rand() % 50 + 450; 
+    int r2 = std::rand() % 50 +  450;  
+
+
+    coordinate temp;
+    vector<coordinate> path;
+         for(double angle=0; angle<=2*pi; angle+=2*pi/500)
+            {
+                temp.x = static_cast<int>( center.x + r1 * cos(angle)); 
+                temp.y = static_cast<int> (center.y + r2 * sin(angle));
+                temp.z = center.z; 
+                path.push_back(temp);
+
+            }
+    
+    return path; 
+
+}
+
+
 
 
 void globalPathPlanner::publishPath(vector<coordinate> somePath)
@@ -342,7 +365,8 @@ void globalPathPlanner::publishPath(vector<coordinate> somePath)
      }
         
             
-  
+        my_loop_rate.sleep(); 
+
    
 
     

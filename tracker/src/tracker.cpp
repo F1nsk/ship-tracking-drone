@@ -54,137 +54,76 @@ void  tracker::gpsCallBck(const sensor_msgs::NavSatFix::ConstPtr& msg)
 
 }
 
-std::vector<std::vector < double>> tracker::multiplyMatrix(std::vector<std::vector<double>> matrixA_, std::vector<std::vector<double>> matrixb_ )
-{   
-
-    std::vector<std::vector<double>> matrixA = matrixA_; 
-    std::vector<std::vector<double>> matrixB = matrixb_;
-    int rows =  matrixA.size();
-    int cols = matrixA[0].size();
-    std::vector<std::vector<double>> multiMatrix(rows, std::vector<double> (cols));
 
 
 
-
-    if( matrixA[0].size() != matrixB.size())
-        {
-            std::cout << " matrix dimensions does not match \n" <<  std::endl; 
-     
-        }
-    else
-        {
-            for(int i =0;  i < matrixA.size(); i++)
-                {
-                    for(int j =0; j < matrixB[0].size(); j++)
-                        {
-                            multiMatrix[i][j] = 0;
-                            for(int k =0; k < matrixB.size(); k++)
-                                {
-
-                                    multiMatrix[i][j] += matrixA[i][k] * matrixB[k][j]; 
-                                }
-                        }
-                }
-        }
-    return multiMatrix; 
-
-}
-
-
-
-
-
-
-std::vector<std::vector<double>> tracker::getYawMatrix(int yawAngle_)
+Eigen::MatrixXd tracker::getYawMatrix(double yawAngle_)
 {
-  int yawAngle = yawAngle_;
+    double yawAngle = yawAngle_;
 
 
-  std::vector< std::vector<double>> yawMatrix =  { {cos(yawAngle), sin(yawAngle), 0},
-                                                    {- sin(yawAngle), cos(yawAngle), 0},
-                                                    {0, 0,1}
-
-                                                  };
+    Eigen::MatrixXd yawMatrix(3,3);
+    yawMatrix << cos(yawAngle), sin(yawAngle), 0, - sin(yawAngle), cos(yawAngle), 0, 0, 0,1;
 
 
     return yawMatrix; 
 }
 
 
-
-std::vector<std::vector<double>> tracker::getPitchMatrix(int pitchAngle_)
+Eigen::MatrixXd tracker::getPitchMatrix(double pitchAngle_)
 {
 
-    int pitchAngle = pitchAngle_; 
+    double pitchAngle = pitchAngle_; 
 
-    std::vector< std::vector < double>> pitchMatrix = { {1, 0, 0},
-                                                        { 0, cos(pitchAngle), -sin(pitchAngle)},
-                                                        {0, sin(pitchAngle), cos(pitchAngle)}
-
-                                                        };
+    Eigen::MatrixXd pitchMatrix(3,3); 
+    pitchMatrix << 1, 0, 0, 0, cos(pitchAngle), -sin(pitchAngle), 0, sin(pitchAngle), cos(pitchAngle);
 
     return pitchMatrix;             
 }
 
 
 
-std::vector< std::vector< double >> tracker::getRollMatrix(int rollAngle_ )
+Eigen::MatrixXd tracker::getRollMatrix(double rollAngle_ )
 {
 
-    int rollAngle = rollAngle_ ; 
+    double rollAngle = rollAngle_ ; 
 
-    std::vector< std::vector < double>> rollMatric = { { cos(rollAngle), 0, sin(rollAngle)},
-                                                        {0,1 ,0},
-                                                        {-sin(rollAngle), 0, cos(rollAngle)} 
-                                                        }; 
+  Eigen::MatrixXd rollMatrix(3,3);
+  rollMatrix << cos(rollAngle), 0, sin(rollAngle), 0,1 ,0 ,-sin(rollAngle), 0, cos(rollAngle);            
 
-    return rollMatric;  
+  return rollMatrix;  
 }
 
 
-void tracker::printMatrix(std::vector<std::vector<double >> matrix_)
+
+
+void tracker::getposeMatrix(double yawAngle_, double pitchAngle_, double rollAngle_)
 {
+    double yawAngle = yawAngle_; 
+    double pitchAngle = pitchAngle_; 
+    double rollAngel = rollAngle_; 
 
-        std::vector< std::vector< double >> matrix = matrix_; 
-
-        for (int i = 0; i < matrix.size(); i++ )
-        {
-            for(int j = 0; j < matrix[0].size(); j++)
-            {
-                std::cout << matrix[i][j] << " " ; 
-              
-            }
-            std::cout << "\n"; 
+    Eigen::MatrixXd tempPoseMatrix; 
+    Eigen::MatrixXd yawMatrix = getYawMatrix(yawAngle); 
+    Eigen::MatrixXd pitchMatix = getPitchMatrix(pitchAngle); 
+    Eigen::MatrixXd rollMatrix = getRollMatrix(rollAngel); 
 
 
-        }
+    tempPoseMatrix = yawMatrix * (pitchMatix * rollMatrix); 
+
+    poseMatrix = tempPoseMatrix; 
 
 
-} 
 
-std::vector<std::vector<double> >tracker::transpose(std::vector<std::vector<double>> matrix_)
-{   
-    
-    std::vector<std::vector< double >> matrix = matrix_; 
-    int rows = matrix.size(); 
-    int cols  = matrix[0].size(); 
-    std::vector<std::vector<double>> tranposeMatrix(rows, std::vector<double> (cols));
 
-    for (int i = 0; i < cols; i ++)
-        {
-            for(int j = 0; j  < rows; j++)
-                {
-                    tranposeMatrix[i][j] = matrix[j][i]; 
-                }
-        } 
-    
-    
-    return tranposeMatrix;  
+
 
 
 
 
 }
+
+
 
 
 void tracker::trackingPath(coordinate center, int radius)
@@ -213,6 +152,66 @@ void tracker::trackingPath(coordinate center, int radius)
     
 
 };
+
+Eigen::MatrixXd tracker::getAMatrix(coordinate pixel_)
+{
+
+    coordinate pixel = pixel_;  
+    double el11 = (pixel.x * poseMatrix.coeff(1,3) + f * poseMatrix.coeff(1,1));
+    double el12 = (pixel.x * poseMatrix.coeff(2,3) + f * poseMatrix.coeff(2,1)); 
+    double el21 = (pixel.y * poseMatrix.coeff(1,2) + f * poseMatrix.coeff(1,2));
+    double el22 = (pixel.y * poseMatrix.coeff(2,3) + f * poseMatrix.coeff(2,2)); 
+    Eigen::MatrixXd AMatrix(2,2); 
+    AMatrix << el11 , el12  , el21 , el22; 
+
+    return AMatrix;                                                      
+
+
+
+
+}
+
+
+Eigen::MatrixXd tracker::getLMatrix(coordinate cameraInWorld_ , coordinate pixel_ )
+{
+
+    double xW = cameraInWorld_.x;
+    double yW = cameraInWorld_.y;
+    double zW = cameraInWorld_.z; 
+    double xP = pixel_.x; 
+    double yP = pixel_.y; 
+    double z = altitude; 
+
+
+    Eigen::MatrixXd LMatrix(2,1);
+    LMatrix <<   xW * (f*poseMatrix.coeff(1,1)+ xP * poseMatrix.coeff(1,3))  + yW * (f * poseMatrix.coeff(2,1) + xP * poseMatrix.coeff(2,3)) + zW * (f * poseMatrix.coeff(3,1) + xW * poseMatrix.coeff(3,3) ) - z * (f * poseMatrix.coeff(3,1) + xW * poseMatrix.coeff(3,3))
+    ,xW * (f*poseMatrix.coeff(1,2)+ yP * poseMatrix.coeff(1,3)) + yW * (f * poseMatrix.coeff(2,2) + yP * poseMatrix.coeff(2,3)) + zW * (f * poseMatrix.coeff(3,2) + yW * poseMatrix.coeff(3,3)) - z * (f * poseMatrix.coeff(3,2) + yW * poseMatrix.coeff(3,3));
+
+    return LMatrix;  
+
+  
+}
+
+coordinate tracker::doMinSquare(Eigen::MatrixXd matrixA_ , Eigen::MatrixXd matrixL_ )
+{
+    Eigen::MatrixXd matrixA = matrixA_;
+    Eigen::MatrixXd matrixL = matrixL_; 
+    Eigen::MatrixXd result(2,1); 
+    coordinate location; 
+
+    result = matrixA.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(matrixL); //least squares solving 
+
+    location.x = result.coeff(1,1);
+    location.y = result.coeff(2,1); 
+    
+    std::cout << "result is \n"  << result << std::endl;   
+    return location; 
+
+
+
+
+
+}
 
 void tracker::publistPath(std::vector<coordinate> somePath)
 {
@@ -254,3 +253,87 @@ tracker::~tracker()
 {
 
 }
+
+
+
+// std::vector<std::vector<double> >tracker::transpose(std::vector<std::vector<double>> matrix_)
+// {   
+    
+//     std::vector<std::vector< double >> matrix = matrix_; 
+//     int rows = matrix.size(); 
+//     int cols  = matrix[0].size(); 
+//     std::vector<std::vector<double>> tranposeMatrix(rows, std::vector<double> (cols));
+
+//     for (int i = 0; i < cols; i ++)
+//         {
+//             for(int j = 0; j  < rows; j++)
+//                 {
+//                     tranposeMatrix[i][j] = matrix[j][i]; 
+//                 }
+//         } 
+    
+    
+//     return tranposeMatrix;  
+
+
+
+
+// }
+
+// std::vector<std::vector < double>> tracker::multiplyMatrix(std::vector<std::vector<double>> matrixA_, std::vector<std::vector<double>> matrixb_ )
+// {   
+
+//     std::vector<std::vector<double>> matrixA = matrixA_; 
+//     std::vector<std::vector<double>> matrixB = matrixb_;
+//     int rows =  matrixA.size();
+//     int cols = matrixA[0].size();
+//     std::vector<std::vector<double>> multiMatrix(rows, std::vector<double> (cols));
+
+
+
+
+//     if( matrixA[0].size() != matrixB.size())
+//         {
+//             std::cout << " matrix dimensions does not match \n" <<  std::endl; 
+     
+//         }
+//     else
+//         {
+//             for(int i =0;  i < matrixA.size(); i++)
+//                 {
+//                     for(int j =0; j < matrixB[0].size(); j++)
+//                         {
+//                             multiMatrix[i][j] = 0;
+//                             for(int k =0; k < matrixB.size(); k++)
+//                                 {
+
+//                                     multiMatrix[i][j] += matrixA[i][k] * matrixB[k][j]; 
+//                                 }
+//                         }
+//                 }
+//         }
+//     return multiMatrix; 
+
+// }
+
+
+
+// double getDet(std::vector < std::vector < double>> matrix_ )
+// {
+
+//     double det = 0; 
+//     std::vector < std::vector < double >> matrix = matrix_; 
+
+//     for( int i =0; i < matrix[0].size() ; i++ )
+//         {
+//             for( int j = 0; j < matrix.size() ; j ++)
+//                 {
+//                     det =  det + (matrix[j][i])
+//                 }
+//         }
+                          
+
+
+
+// }
+

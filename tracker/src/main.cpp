@@ -13,8 +13,12 @@ int main(int argc, char **argv)
 
        
         tracker tr; 
+        tr.getposeMatrix(0, 0.349, 0); 
+        std::cout << tr.poseMatrix << std::endl; 
+       std::cout << tr.getAMatrix({0,0}) << std::endl;
 
-       tr.printMatrix(tr.transpose(a)); 
+        std::cout << tr.getLMatrix({150,500}, {0,0})<< std::endl;
+         tr.doMinSquare(tr.getAMatrix({0,0}) , tr.getLMatrix({150,500}, {0,0}));
 
 
 
