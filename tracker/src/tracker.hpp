@@ -34,8 +34,11 @@ class tracker
 {
 
     public:
-    Eigen::MatrixXd poseMatrix; 
     tracker();
+    long  double altitude = 0;
+    long double planeheight = 0;  
+    Eigen::MatrixXd poseMatrix;
+
     void trackStartCallBck(const std_msgs::Bool::ConstPtr& msg); 
     void darknetCallBck(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg); 
     void gpsCallBck(const sensor_msgs::NavSatFix::ConstPtr& msg); 
@@ -44,9 +47,10 @@ class tracker
     Eigen::MatrixXd getYawMatrix( double yawAngle_); 
     Eigen::MatrixXd getPitchMatrix(double pitchAngle_); 
     Eigen::MatrixXd getRollMatrix(double rollAngle_);
-    Eigen::MatrixXd getAMatrix(coordinate pixel_);
+    Eigen::MatrixXd getAMatrix(coordinate pixel_, bool debug_);
+    void testPoseMatrix(Eigen::MatrixXd TESTposeMatrix); 
     void getposeMatrix(double yawAngle_, double pitchAngle_, double rollAngle_ ); 
-    Eigen::MatrixXd getLMatrix(coordinate carmeraInWorld_, coordinate pixel_);
+    Eigen::MatrixXd getLMatrix(coordinate carmeraInWorld_, coordinate pixel_, bool debug_);
     coordinate doMinSquare( Eigen::MatrixXd matrixA_ , Eigen::MatrixXd matrixL_   );   
     // std::vector < std::vector < double >> multiplyMatrix(std::vector<std::vector< double>> matrixA_, std::vector<std::vector< double>> matrixB_);
     // std::vector < std::vector < double >> transpose(std::vector< std::vector< double>> matrix_); 
@@ -56,6 +60,7 @@ class tracker
     void trackingPath(coordinate center, int radius); 
     ros::NodeHandle n;
     void publistPath(std::vector<coordinate> somePath); 
+    void findPointPosImage(long double focalLenght_,  std::vector<long double> cameraWorldPostion_, std::vector<long double> pointPositionInWorld_); 
 
        
 
@@ -76,14 +81,16 @@ class tracker
 
     private:
 
-        double f = 4651.16; //forcal lenght?  
-        double sensorW = 5456/2; // sensor width in pixels
-        double sensorH = 3064/2; // sensor height in pixels
-        
-        ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("/position_controller/drone",50 , true);
-        double altitude =100; 
+       long double f = 3697.77138662036; //forcal lenght?  
+       long double sensorW = 5456/2; // sensor width in pixels
+       long   double sensorH = 3632/2; // sensor height in pixels
 
-        
+                
+        ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("/position_controller/drone",50 , true);
+     
+
+
+    
         // gpsCoordinate    
 
 

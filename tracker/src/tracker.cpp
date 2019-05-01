@@ -24,6 +24,14 @@ void tracker::darknetCallBck(const darknet_ros_msgs::BoundingBoxes::ConstPtr& ms
 
 }
 
+
+void tracker::testPoseMatrix(Eigen::MatrixXd TESTposeMatrix)
+{
+    poseMatrix = TESTposeMatrix; 
+
+
+}
+
 coordinate tracker::calcCenterPoint(coordinate min, coordinate max)
 {
         coordinate centerPoint; 
@@ -57,7 +65,7 @@ void  tracker::gpsCallBck(const sensor_msgs::NavSatFix::ConstPtr& msg)
 
 
 
-Eigen::MatrixXd tracker::getYawMatrix(double yawAngle_)
+Eigen::MatrixXd tracker::getYawMatrix(double yawAngle_) // computes the yaw ration matrix based on the inputted angle
 {
     double yawAngle = yawAngle_;
 
@@ -70,7 +78,7 @@ Eigen::MatrixXd tracker::getYawMatrix(double yawAngle_)
 }
 
 
-Eigen::MatrixXd tracker::getPitchMatrix(double pitchAngle_)
+Eigen::MatrixXd tracker::getPitchMatrix(double pitchAngle_)  // computes the pitch ration matrix based on the inputted angle
 {
 
     double pitchAngle = pitchAngle_; 
@@ -83,7 +91,7 @@ Eigen::MatrixXd tracker::getPitchMatrix(double pitchAngle_)
 
 
 
-Eigen::MatrixXd tracker::getRollMatrix(double rollAngle_ )
+Eigen::MatrixXd tracker::getRollMatrix(double rollAngle_ )  // computes the roll ration matrix based on the inputted angle
 {
 
     double rollAngle = rollAngle_ ; 
@@ -97,7 +105,7 @@ Eigen::MatrixXd tracker::getRollMatrix(double rollAngle_ )
 
 
 
-void tracker::getposeMatrix(double yawAngle_, double pitchAngle_, double rollAngle_)
+void tracker::getposeMatrix(double yawAngle_, double pitchAngle_, double rollAngle_)  // computes the complete ration matrix based on the inputted angle 
 {
     double yawAngle = yawAngle_; 
     double pitchAngle = pitchAngle_; 
@@ -153,16 +161,23 @@ void tracker::trackingPath(coordinate center, int radius)
 
 };
 
-Eigen::MatrixXd tracker::getAMatrix(coordinate pixel_)
+Eigen::MatrixXd tracker::getAMatrix(coordinate pixel_, bool debug_) 
 {
-
+    bool debug = debug_;
     coordinate pixel = pixel_;  
-    double el11 = (pixel.x * poseMatrix.coeff(1,3) + f * poseMatrix.coeff(1,1));
-    double el12 = (pixel.x * poseMatrix.coeff(2,3) + f * poseMatrix.coeff(2,1)); 
-    double el21 = (pixel.y * poseMatrix.coeff(1,2) + f * poseMatrix.coeff(1,2));
-    double el22 = (pixel.y * poseMatrix.coeff(2,3) + f * poseMatrix.coeff(2,2)); 
+    long double el11 = (pixel.x * poseMatrix.coeff(0,2) + f * poseMatrix.coeff(0,0));
+    long double el12 = (pixel.x * poseMatrix.coeff(1,2) + f * poseMatrix.coeff(1,0)); 
+    long double el21 = (pixel.y * poseMatrix.coeff(0,2) + f * poseMatrix.coeff(0,1));
+    long double el22 = (pixel.y * poseMatrix.coeff(1,2) + f * poseMatrix.coeff(1,1)); 
     Eigen::MatrixXd AMatrix(2,2); 
     AMatrix << el11 , el12  , el21 , el22; 
+
+    if(debug == true)
+    {
+        std::cout << "A" << std::endl; 
+        std::cout << AMatrix << std::endl;  
+    }
+
 
     return AMatrix;                                                      
 
@@ -172,37 +187,95 @@ Eigen::MatrixXd tracker::getAMatrix(coordinate pixel_)
 }
 
 
-Eigen::MatrixXd tracker::getLMatrix(coordinate cameraInWorld_ , coordinate pixel_ )
+Eigen::MatrixXd tracker::getLMatrix(coordinate cameraInWorld_ , coordinate pixel_ , bool bebug_) // computes the the L matrix needed for min square decompostion 
 {
-
-    double xW = cameraInWorld_.x;
-    double yW = cameraInWorld_.y;
-    double zW = cameraInWorld_.z; 
-    double xP = pixel_.x; 
-    double yP = pixel_.y; 
-    double z = altitude; 
+    bool debug = bebug_; 
+    long double x0 = cameraInWorld_.x;
+    long double y0 = cameraInWorld_.y;
+    long double z0 = altitude; 
+    long double x = pixel_.x; 
+    long double y = pixel_.y; 
+    long double focal = f;
+    long double Z = planeheight; //point height, ref height of the plane 
+    long double r11 = poseMatrix.coeff(0,0);
+    long double r12 = poseMatrix.coeff(0,1);
+    long double r13 = poseMatrix.coeff(0,2);
+    long double r21 = poseMatrix.coeff(1,0);
+    long double r22 = poseMatrix.coeff(1,1);
+    long double r23 = poseMatrix.coeff(1,2);
+    long double r31 = poseMatrix.coeff(2,0);
+    long double r32 = poseMatrix.coeff(2,1);
+    long double r33 = poseMatrix.coeff(2,2);
+    long double el11 = (focal * r11 * x0 + focal * r21 * y0 - focal * r31 * Z + focal * r31 * z0 + x * r13 * x0 + x * r23 * y0 - x * r33 * Z + x * r33 * z0);
+    long double el21 = (focal * r12 * x0 + focal * r22 * y0 - focal * r32 * Z + focal * r32 * z0 + y * r13 * x0 + y * r23 * y0 - y * r33 * Z + y * r33 * z0);
 
 
     Eigen::MatrixXd LMatrix(2,1);
-    LMatrix <<   xW * (f*poseMatrix.coeff(1,1)+ xP * poseMatrix.coeff(1,3))  + yW * (f * poseMatrix.coeff(2,1) + xP * poseMatrix.coeff(2,3)) + zW * (f * poseMatrix.coeff(3,1) + xW * poseMatrix.coeff(3,3) ) - z * (f * poseMatrix.coeff(3,1) + xW * poseMatrix.coeff(3,3))
-    ,xW * (f*poseMatrix.coeff(1,2)+ yP * poseMatrix.coeff(1,3)) + yW * (f * poseMatrix.coeff(2,2) + yP * poseMatrix.coeff(2,3)) + zW * (f * poseMatrix.coeff(3,2) + yW * poseMatrix.coeff(3,3)) - z * (f * poseMatrix.coeff(3,2) + yW * poseMatrix.coeff(3,3));
+    LMatrix <<  el11 , el21; 
+    if(debug == true)
+    {
+    std::cout << "debug"<< std::endl;
 
+    std::cout << r11 << std::endl; 
+    std::cout << r12 << std::endl; 
+    std::cout << r13 << std::endl; 
+    std::cout << r21 << std::endl; 
+    std::cout << r22 << std::endl; 
+    std::cout << r23 << std::endl; 
+    std::cout << r31 << std::endl; 
+    std::cout << r32 << std::endl; 
+    std::cout << r33 << std::endl; 
+  
+
+    std::cout << "L" << std::endl;
+    std::cout << LMatrix << std::endl; 
+    }
     return LMatrix;  
 
   
 }
+void tracker::findPointPosImage(long double focalLenght_,  std::vector<long double> cameraWorldPostion_, std::vector<long double> pointPositionInWorld_)
+{
+        long double focalLenght = focalLenght_; 
+        long double camWorldX = cameraWorldPostion_[0];
+        long double camWorldY = cameraWorldPostion_[1];
+        long double camWorldZ = cameraWorldPostion_[2]; 
+        long double pointWorldX = pointPositionInWorld_[0]; 
+        long double pointWorldY = pointPositionInWorld_[1];
+        long double pointWorldZ = pointPositionInWorld_[2]; 
 
-coordinate tracker::doMinSquare(Eigen::MatrixXd matrixA_ , Eigen::MatrixXd matrixL_ )
+        long double yP = 0;
+        long double xP = 0; 
+
+        xP = -focalLenght * ( ( (poseMatrix.coeff(0,0)*(pointWorldX - camWorldX)) + (poseMatrix.coeff(1,0) * (pointWorldY - camWorldY))  + (poseMatrix.coeff(2,0) * (pointWorldZ - camWorldZ)) )/
+                              ( (poseMatrix.coeff(0,2)*(pointWorldX - camWorldX)) + (poseMatrix.coeff(1,2) * (pointWorldY - camWorldY))  + (poseMatrix.coeff(2,2) * (pointWorldZ - camWorldZ)) )); 
+
+        yP   =-focalLenght * (( ( poseMatrix.coeff(0,1)*(pointWorldX - camWorldX) + poseMatrix.coeff(1,1) * (pointWorldY - camWorldY)  + poseMatrix.coeff(2,1) * (pointWorldZ - camWorldZ) ))/(( poseMatrix.coeff(1,2)*(pointWorldX - camWorldX) + poseMatrix.coeff(1,2) * (pointWorldY - camWorldY)  + poseMatrix.coeff(2,2) * (pointWorldZ - camWorldZ) ))); 
+
+
+        std::cout << "xP = " << std::endl;
+        std::cout <<  xP <<  std::endl;
+        std::cout <<  "\n" << std::endl; 
+        std::cout << "yP = " << std::endl; 
+        std::cout << yP << std::endl; 
+        std::cout <<"\n" << std::endl; 
+
+}
+
+coordinate tracker::doMinSquare(Eigen::MatrixXd matrixA_ , Eigen::MatrixXd matrixL_ ) //does the min square decompotion using the eigen library 
 {
     Eigen::MatrixXd matrixA = matrixA_;
     Eigen::MatrixXd matrixL = matrixL_; 
     Eigen::MatrixXd result(2,1); 
     coordinate location; 
+    // std::cout << "here" << std::endl; 
+    // std::cout << matrixA << std::endl; 
+    // std::cout << matrixL << std::endl; 
 
     result = matrixA.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(matrixL); //least squares solving 
-
-    location.x = result.coeff(1,1);
-    location.y = result.coeff(2,1); 
+    //result = matrixA.ldlt().solve(matrixL);
+    location.x = result.coeff(0,0);
+    location.y = result.coeff(1,0); 
     
     std::cout << "result is \n"  << result << std::endl;   
     return location; 
