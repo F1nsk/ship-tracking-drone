@@ -6,6 +6,7 @@
 #include <ros/ros.h>
 #include <vector> 
 #include <eigen3/Eigen/Dense> 
+#include <stdio.h>
 
 const double pi = 3.14159;
 

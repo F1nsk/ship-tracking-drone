@@ -267,17 +267,29 @@ coordinate tracker::doMinSquare(Eigen::MatrixXd matrixA_ , Eigen::MatrixXd matri
     Eigen::MatrixXd matrixA = matrixA_;
     Eigen::MatrixXd matrixL = matrixL_; 
     Eigen::MatrixXd result(2,1); 
+    Eigen::MatrixXd temp; 
     coordinate location; 
     // std::cout << "here" << std::endl; 
     // std::cout << matrixA << std::endl; 
     // std::cout << matrixL << std::endl; 
-
-    result = matrixA.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(matrixL); //least squares solving 
+//    (A.transpose() * A).ldlt().solve(A.transpose() * b) 
+    // result = matrixA.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(matrixL); //least squares solving 
     //result = matrixA.ldlt().solve(matrixL);
+
+    // result = (matrixA.transpose() * matrixA).ldlt().solve(matrixA.transpose() * matrixL);
     location.x = result.coeff(0,0);
     location.y = result.coeff(1,0); 
-    
-    std::cout << "result is \n"  << result << std::endl;   
+    temp = matrixA.transpose() * matrixA; 
+    std::cout << "temp inv" << std::endl;
+   
+
+    result = temp.inverse() *  matrixA.transpose() * matrixL;
+    printf(" x result is %f \n", result.coeff(0,0 ));   
+    printf(" Y result is %f \n", result.coeff(1,0 ));   
+     std::cout << result << std::endl;
+
+    location.x = result.coeff(0,0);
+    location.y = result.coeff(1,0); 
     return location; 
 
 
