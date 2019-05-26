@@ -6,6 +6,13 @@ cvFunctions::cvFunctions():it(nH)
 
 }
 
+void::cvFunctions::helloReader()
+{
+    std::cout << "Hello reader" << std::endl;  
+}
+
+
+
 cv::Mat  cvFunctions::importImg(std::string pathToImage)
 {
 
