@@ -62,6 +62,7 @@ class tracker
     ros::NodeHandle n;
     void publistPath(std::vector<coordinate> somePath); 
     void findPointPosImage(long double focalLenght_,  std::vector<long double> cameraWorldPostion_, std::vector<long double> pointPositionInWorld_); 
+    void test(); 
 
        
 

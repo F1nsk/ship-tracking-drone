@@ -11,6 +11,10 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  image_transport
+  cv_bridge  
+  sensor_msgs
+
 )
 
 
@@ -34,6 +38,10 @@ include_directories(
 
 
 add_executable(stateMachine_node src/main.cpp src/stateMachine.cpp )
-target_link_libraries( stateMachine_node 
+
+
+find_package(OpenCV)
+include_directories(${OpenCV_INCLUDE_DIRS})
+target_link_libraries( stateMachine_node  
                           ${catkin_LIBRARIES}
-                          )
+                          ${OpenCV_LIBRARIES})

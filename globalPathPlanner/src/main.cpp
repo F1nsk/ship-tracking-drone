@@ -14,10 +14,10 @@ int main(int argc, char **argv)
 //    // gp.getPoint(input);
 
      
-    coordinate a = {0, 1000, 100};
-    coordinate b = {1000, 1000, 100};
-    coordinate c = {0, 0, 100};
-    coordinate d = {1000, 0, 100};
+    coordinate a = {0, 100,25};
+    coordinate b = {100, 100, 25};
+    coordinate c = {0, 0, 25};
+    coordinate d = {100, 0, 25};
     vector <coordinate> squarePath = {a, b, c, d}; 
 
 //     gp.flyincirkel(center, 100, 5, false);
@@ -34,7 +34,7 @@ int main(int argc, char **argv)
     
     // vector<coordinate>  path = gp.flyincirkel(center, 30, 500, false);
      vector<coordinate> pathElip = gp.elipsiodPath(center, 50, 100, 500 );
-    vector<coordinate>  pathGrid = gp.generateMap(a, b, c, d, 50); 
+    vector<coordinate>  pathGrid = gp.generateMap(a, b, c, d, 1, 90); 
 
     ros::Subscriber sub = gp.n.subscribe("/stateMachine/areaSearcher/trigger", 1, &globalPathPlanner::msgCallback, &gp ); 
     ros::Rate loop_rate(10);
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
             else if (gp.run == true)
             {
              gp.takeOff(); 
-             gp.publishPath(pathElip);
+             gp.publishPath(pathGrid);
              
             }
             else 

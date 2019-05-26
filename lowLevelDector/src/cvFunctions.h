@@ -4,7 +4,6 @@
 #include "opencv2/core/utility.hpp"
 #include "opencv2/features2d.hpp"
 #include "opencv2/xfeatures2d.hpp"
-#include <std_msgs/String.h>
 #include "opencv2/imgcodecs.hpp"
 #include <math.h>
 #include <iostream>
@@ -14,14 +13,11 @@
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h> 
 #include <sensor_msgs/Image.h> 
-#include <std_msgs/Bool.h>
 #include <std_msgs/String.h> 
 #include <sensor_msgs/image_encodings.h> 
-#include <opencv2/opencv.hpp>
 #include <sstream> 
 using namespace cv;
 
-using namespace cv;
 
 static int edgeThresh = 15; // edge detection threshhold
 static int minHessian = 400;

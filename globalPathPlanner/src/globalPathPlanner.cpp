@@ -174,14 +174,15 @@ vector<coordinate> globalPathPlanner::flyincirkel(coordinate center, int radius,
 
 
 
-vector<coordinate> globalPathPlanner::generateMap(coordinate a, coordinate b, coordinate c, coordinate d, double gridResolution)
+vector<coordinate> globalPathPlanner::generateMap(coordinate a, coordinate b, coordinate c, coordinate d, double gridResolution, double colDist)
 {
         
      vector<coordinate> coordList;
      
      vector<coordinate> removeMe; 
      coordinate tempC =  c;
-     double gridRes = gridResolution; 
+     double gridRes = gridResolution;
+     double coldist = colDist;  
      int numberOfcol = 0; 
      int y = 0; 
      int x = 0; 
@@ -200,7 +201,7 @@ vector<coordinate> globalPathPlanner::generateMap(coordinate a, coordinate b, co
         // int numberOfPtsShortSide = distThree/gridRes; 
      
        
-        for(i = 0; i <= d.x; i+=gridRes)
+        for(i = 0; i <= d.x; i+=coldist)
         {
           coordinate temp;
             temp.z = a.z; 
@@ -211,7 +212,7 @@ vector<coordinate> globalPathPlanner::generateMap(coordinate a, coordinate b, co
 
                 if(numberOfcol %  2 == 0)
                 {
-                    for(j = 0; j <= a.y; j++)
+                    for(j = 0; j <= a.y; j+=gridRes)
                     {
                          temp.y = c.y +j;
                          coordList.push_back(temp); 
@@ -222,7 +223,7 @@ vector<coordinate> globalPathPlanner::generateMap(coordinate a, coordinate b, co
                 }
                 else 
                 {
-                     for(j = 0; j <= a.y; j++)
+                     for(j = 0; j <= a.y; j+=gridRes)
                     {
                          temp.y = a.y -j; 
                          coordList.push_back(temp); 

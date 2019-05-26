@@ -280,13 +280,11 @@ coordinate tracker::doMinSquare(Eigen::MatrixXd matrixA_ , Eigen::MatrixXd matri
     location.x = result.coeff(0,0);
     location.y = result.coeff(1,0); 
     temp = matrixA.transpose() * matrixA; 
-    std::cout << "temp inv" << std::endl;
    
 
     result = temp.inverse() *  matrixA.transpose() * matrixL;
     printf(" x result is %f \n", result.coeff(0,0 ));   
     printf(" Y result is %f \n", result.coeff(1,0 ));   
-     std::cout << result << std::endl;
 
     location.x = result.coeff(0,0);
     location.y = result.coeff(1,0); 
@@ -332,6 +330,120 @@ void tracker::publistPath(std::vector<coordinate> somePath)
 
 
 }
+
+void tracker::test()
+{
+
+
+        std::vector<Eigen::MatrixXd> rotationMatrices; 
+        std::vector<coordinate  > GPSKeeper;
+        std::vector<long double> planeheightKeeper;  
+        std::vector <  coordinate > pixelKeeper; 
+        coordinate result; 
+        coordinate groundTruth = {241753.220826,	6160294.860516,	5.732144};
+
+        /* point on which the testing is  done each matrix represents a rotation matrix   */ 
+
+        Eigen::MatrixXd img35Matrix(3, 3);
+        img35Matrix << 0.87178906, -0.47651387, -0.11365898,0.46938413,0.87892968, -0.08462365,0.14022259,0.02042425,0.98990933;
+        coordinate img35GPS =  {241737.9833458330831490,	6160289.3355145351961255,	110.7603127174832451};  // x, y ,z 
+        long double img35PlaneHeigth =5.732144; 
+        coordinate img35Pixel = {40, -158}; 
+        rotationMatrices.push_back(img35Matrix); 
+        GPSKeeper.push_back(img35GPS); 
+        planeheightKeeper.push_back(img35PlaneHeigth);
+        pixelKeeper.push_back(img35Pixel); 
+        
+
+        Eigen::MatrixXd img36Matrix(3,3);
+        img36Matrix << 0.7397178,-0.66367138,	-0.111166,0.66527495,0.74609534,-0.02740405,0.10112772,-0.05368469,0.99342395;
+        coordinate img36GPS = {241710.6285522790276445,	6160303.0373303480446339,	113.3814467622704854}; 
+        long double img36PlaneHeigth =5.732144; 
+        coordinate img36Pixel = {503.6472411207838, -948.5236402396183};
+        rotationMatrices.push_back(img36Matrix); 
+        GPSKeeper.push_back(img36GPS); 
+        planeheightKeeper.push_back(img36PlaneHeigth); 
+        pixelKeeper.push_back(img36Pixel);
+        
+
+
+        Eigen::MatrixXd img37Matrix(3,3); 
+        img37Matrix << 7.76978654e-01, -6.23715520e-01,-8.53412068e-02,6.29526438e-01,7.69976976e-01,1.04076510e-01,7.96629660e-04,-1.34589773e-01,9.90901084e-01;
+        coordinate img37GPS = {241680.6798939024738502,	6160315.2465446069836617,	113.9804108923304256}; 
+        long double img37PlaneHeigth =5.732144;
+        coordinate img37Pixel = {1389.9298413006206, -1483.6601730397513};
+        rotationMatrices.push_back(img37Matrix); 
+        GPSKeeper.push_back(img37GPS); 
+        planeheightKeeper.push_back(img37PlaneHeigth);
+        pixelKeeper.push_back(img37Pixel);  
+        
+
+        Eigen::MatrixXd img55Matrix(3,3); 
+        img55Matrix <<0.1534163,0.98763462,-0.03226912,-0.98816051,0.15338387,-0.00349262,0.00150013,0.0324229,0.99947311 ;
+        coordinate img55GPS = {241718.5752740695024841,	6160345.4928991990163922,	110.1268070192413973};
+        long double img55PlaneHeigth =5.732144;
+        coordinate img55Pixel = {1938.4881078918133, 810.152025038569};
+        rotationMatrices.push_back(img55Matrix); 
+        GPSKeeper.push_back(img55GPS); 
+        planeheightKeeper.push_back(img55PlaneHeigth); 
+        pixelKeeper.push_back(img55Pixel); 
+        
+
+        Eigen::MatrixXd img56Matrix(3,3); 
+        img56Matrix << 0.24265478,0.96977073,-0.02575655,-0.96982543,0.24314348,0.01788507,0.02360695,0.02063946,0.99950824;
+        coordinate img56GPS = {241745.2931913038482890,	6160333.6742490641772747,	111.4323529299558828};
+        long double img56PlaneHeigth =5.732144;
+        coordinate img56Pixel = {1286.5726756857573, -136.4250031942299};
+        rotationMatrices.push_back(img56Matrix); 
+        GPSKeeper.push_back(img56GPS); 
+        planeheightKeeper.push_back(img56PlaneHeigth); 
+        pixelKeeper.push_back(img56Pixel); 
+    
+        
+
+        Eigen::MatrixXd img57Matrix(3,3); 
+        img57Matrix << 0.28759024,0.9572824,-0.03003756,-0.9576957,0.28777609,0.00196592,0.01052604,0.02820146,0.99954684;
+        coordinate img57GPS = {241772.7440308686345816,	6160322.5347383925691247,	110.1915097883977239}; 
+        long double img57PlaneHeigth =5.732144; 
+        coordinate img57Pixel = {704.4296041259586, -1053.6265464797905};
+        rotationMatrices.push_back(img57Matrix); 
+        GPSKeeper.push_back(img57GPS); 
+        planeheightKeeper.push_back(img57PlaneHeigth);
+        pixelKeeper.push_back(img57Pixel); 
+        
+
+
+        Eigen::MatrixXd img58Matrix(3,3); 
+        img58Matrix << 0.30626497,0.95107523,0.04071469,-0.95097731,0.30374396,0.05815288,0.04294092,-0.05652893,0.9974771; 
+        coordinate img58GPS = {241801.3945700247422792,	6160310.8569446457549930,	112.0742519670662887}; 
+        long double img58PlaneHeigth =5.732144;   
+        coordinate img58Pixel = { -139.41008526816532, -1515.6939423784052};
+        rotationMatrices.push_back(img58Matrix); 
+        GPSKeeper.push_back(img58GPS); 
+        planeheightKeeper.push_back(img58PlaneHeigth); 
+        pixelKeeper.push_back(img58Pixel); 
+
+        for(int i =0; i < 7; i++)
+            {
+                altitude = GPSKeeper[i].z;
+                planeheight = planeheightKeeper[i];
+                testPoseMatrix(rotationMatrices[i]);
+                //getAMatrix({ -139, -1515}, true);
+                //getLMatrix(GPSKeeper[i], pixelKeeper[i], true);
+                std::cout << " image " << i << std::endl; 
+                result =  doMinSquare(getAMatrix(pixelKeeper[i], false) , getLMatrix(GPSKeeper[i], pixelKeeper[i], false) );
+                std::cout << "error in x " << std::endl; 
+                std::cout << result.x - groundTruth.x << std::endl; 
+                std::cout << "errpr in y" << std::endl; 
+                std::cout << result.y - groundTruth.y << std::endl; 
+
+            }
+
+
+
+
+}
+
 
 
 tracker::~tracker()

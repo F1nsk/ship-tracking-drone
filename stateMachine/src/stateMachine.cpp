@@ -76,6 +76,42 @@ void stateMachine::stateChanger()
 }
 
 
+// void stateMachine::imageCallback(const sensor_msgs::ImageConstPtr& imgMsg)
+// {
+
+//    cv_bridge::CvImagePtr img_ptr;  
+//    cv::Mat imgRGB; 
+ 
+//   try
+//   {
+     
+   
+
+//     img_ptr = cv_bridge::toCvCopy(imgMsg, sensor_msgs::image_encodings::BGR8); 
+//     imgRGB = img_ptr->image;
+    	
+
+    
+//     //cv::imshow("view", imgRGB);
+//     //cv::waitKey(10);
+//   }
+//   catch (cv_bridge::Exception& e)
+//   {
+//     ROS_ERROR("Could not convert from '%s' to 'bgr8'.", imgMsg->encoding.c_str());
+//   }
+// }
+
+
+// void stateMachine::imagPublisher(cv::Mat img)
+// {
+//     cv::Mat temp = img; 
+//     sensor_msgs::ImagePtr imgMsg;
+//     imgMsg = cv_bridge::CvImage(std_msgs::Header(), "rgb8", temp).toImageMsg(); 
+//     imagePub.publish(imgMsg);
+
+
+// }
+
 
 
 

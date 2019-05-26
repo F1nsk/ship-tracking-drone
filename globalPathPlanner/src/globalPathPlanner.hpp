@@ -39,7 +39,7 @@ public:
     void getPoint(vector<double> input);
     bool isSquare(coordinate a, coordinate b, coordinate c, coordinate d);
     vector<coordinate> flyincirkel(coordinate center, int radius, int numberOfPoints, bool show);
-    vector<coordinate> generateMap(coordinate a, coordinate b, coordinate c, coordinate d, double gridResolution);
+    vector<coordinate> generateMap(coordinate a, coordinate b, coordinate c, coordinate d, double gridResolution, double colDist);
     vector<coordinate> elipsiodPath(coordinate center, int r1, int r2,  int numberOfPoints); 
     vector<coordinate> randomwElip(coordinate center); 
 
@@ -67,7 +67,7 @@ private:
     coordinate pointThree;
     coordinate pointFour;
     vector<coordinate> gridCoordinates; 
-    ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("/position_controller/boat",50 , true);
+    ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("/position_controller/drone",50 , true);
     int interator = 1; 
     int takeOffiterator = 1; 
 
