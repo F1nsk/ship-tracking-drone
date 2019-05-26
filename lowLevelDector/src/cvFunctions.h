@@ -61,6 +61,8 @@ public:
 
  ~cvFunctions();
 private:
+ 
+ void helloReader(); 
   
  cv::Mat edgeImg;
  cv::Mat greyScaleImg;
